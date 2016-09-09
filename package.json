@@ -1,0 +1,20 @@
+{
+  "name": "dynaql",
+  "version": "1.0.0",
+  "description": "Dynamo library to make interacting with dynamo easier",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shichongrui/dynaql.git"
+  },
+  "keywords": [
+    "dynamo",
+    "aws"
+  ],
+  "author": "Matthew Sessions <shichongrui@gmail.com> (http://www.matthewsessions.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shichongrui/dynaql/issues"
+  },
+  "homepage": "https://github.com/shichongrui/dynaql#readme"
+}
