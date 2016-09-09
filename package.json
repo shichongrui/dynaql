@@ -1,6 +1,6 @@
 {
   "name": "dynaql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dynamo library to make interacting with dynamo easier",
   "main": "index.js",
   "repository": {
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/shichongrui/dynaql/issues"
   },
-  "homepage": "https://github.com/shichongrui/dynaql#readme"
+  "homepage": "https://github.com/shichongrui/dynaql#readme",
+  "dependencies": {
+    "aws-sdk": "2.5.6"
+  }
 }
