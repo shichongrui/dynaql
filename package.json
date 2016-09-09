@@ -1,6 +1,6 @@
 {
   "name": "dynaql",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Dynamo library to make interacting with dynamo easier",
   "main": "dist/index.js",
   "scripts": {
