@@ -15,7 +15,7 @@ exports.default = function (client, TableName, Key, update) {
       Key: Key,
       ReturnValues: 'ALL_NEW'
     }, createUpdateExpression(update));
-    console.log(params);
+
     client.update(params, function (err, data) {
       if (err) return reject(err);
       resolve(data.Attributes);
