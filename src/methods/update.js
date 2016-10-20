@@ -39,7 +39,7 @@ export default function (client, TableName, Key, update) {
       ReturnValues: 'ALL_NEW',
       ...createUpdateExpression(update)
     }
-    console.log(params)
+
     client.update(params, (err, data) => {
       if (err) return reject(err)
       resolve(data.Attributes)
