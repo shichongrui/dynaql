@@ -12,7 +12,7 @@ function performBatchWrite (client, params) {
 }
 
 export default async function (client, writeType, TableName, Items) {
-  let chunks = chunk(Keys, MAX_BATCH_WRITE)
+  let chunks = chunk(Items, MAX_BATCH_WRITE)
 
   await Promise.all(chunks.map(async (chunk) => {
     let params = {
