@@ -16,6 +16,9 @@ exports.default = function (config) {
   instance.indexes = indexes;
 
   return {
+    client: instance,
+    documentClient: client,
+
     get: _get2.default.bind(null, client),
     update: _update2.default.bind(null, client),
     query: _query2.default.bind(null, client),
