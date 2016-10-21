@@ -7,6 +7,7 @@ import query from './methods/query'
 import put from './methods/put'
 import destroy from './methods/delete'
 import getAll from './methods/get-all'
+import writeAll from './methods/write-all'
 
 // normal client
 import createTable from './methods/create-table'
@@ -25,13 +26,15 @@ export default function (config) {
   return {
     client: instance,
     documentClient: client,
-    
+
     get: get.bind(null, client),
     update: update.bind(null, client),
     query: query.bind(null, client),
     put: put.bind(null, client),
     delete: destroy.bind(null, client),
     getAll: getAll.bind(null, client),
+    writeAll: writeAll.bind(null, client, 'PutRequest'),
+    deleteAll: writeAll.bind(null, client, 'DeleteRequest'),
 
     createTable: createTable.bind(null, instance),
     deleteTable: deleteTable.bind(null, instance),

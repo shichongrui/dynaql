@@ -25,6 +25,8 @@ exports.default = function (config) {
     put: _put2.default.bind(null, client),
     delete: _delete2.default.bind(null, client),
     getAll: _getAll2.default.bind(null, client),
+    writeAll: _writeAll2.default.bind(null, client, 'PutRequest'),
+    deleteAll: _writeAll2.default.bind(null, client, 'DeleteRequest'),
 
     createTable: _createTable2.default.bind(null, instance),
     deleteTable: _deleteTable2.default.bind(null, instance),
@@ -60,6 +62,10 @@ var _delete2 = _interopRequireDefault(_delete);
 var _getAll = require('./methods/get-all');
 
 var _getAll2 = _interopRequireDefault(_getAll);
+
+var _writeAll = require('./methods/write-all');
+
+var _writeAll2 = _interopRequireDefault(_writeAll);
 
 var _createTable = require('./methods/create-table');
 
