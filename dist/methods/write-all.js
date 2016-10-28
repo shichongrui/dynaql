@@ -29,13 +29,14 @@ exports.default = function () {
   var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(client, writeType, TableName, Items) {
     var _this = this;
 
-    var chunks;
+    var chunks, param;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             chunks = (0, _chunk2.default)(Items, MAX_BATCH_WRITE);
-            _context2.next = 3;
+            param = writeType === 'PutRequest' ? 'Item' : 'Key';
+            _context2.next = 4;
             return Promise.all(chunks.map(function () {
               var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(chunk) {
                 var params, data;
@@ -45,9 +46,7 @@ exports.default = function () {
                       case 0:
                         params = {
                           RequestItems: _defineProperty({}, TableName, chunk.map(function (item) {
-                            return _defineProperty({}, writeType, {
-                              Item: item
-                            });
+                            return _defineProperty({}, writeType, _defineProperty({}, param, item));
                           }))
                         };
 
@@ -81,7 +80,7 @@ exports.default = function () {
               };
             }()));
 
-          case 3:
+          case 4:
           case 'end':
             return _context2.stop();
         }
