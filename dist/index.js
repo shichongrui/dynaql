@@ -5,9 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (config) {
-  var indexes = config.indexes;
-
-  var restConfig = _objectWithoutProperties(config, ['indexes']);
+  var indexes = config.indexes,
+      restConfig = _objectWithoutProperties(config, ['indexes']);
 
   var client = new _awsSdk2.default.DynamoDB.DocumentClient(restConfig);
   var instance = new _awsSdk2.default.DynamoDB(restConfig);
