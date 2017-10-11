@@ -1,37 +1,35 @@
-import chunk from '../lib/chunk'
+const MAX_BATCH_GET = 100;
 
-const MAX_BATCH_GET = 100
+module.exports = async function(clientPromise, TableName, Keys) {
+  let { documentClient } = await clientPromise;
 
-function performBatchGet (client, params) {
-  return new Promise((resolve, reject) => {
-    client.batchGet(params, (err, data) => {
-      if (err) return reject(err)
-      resolve(data)
-    })
-  })
-}
+  let maxKeys = Keys.slice(0, MAX_BATCH_GET);
+  let remainingKeys = Keys.slice(MAX_BATCH_GET);
 
-export default async function (client, TableName, Keys) {
-  let chunks = chunk(Keys, MAX_BATCH_GET)
+  let params = {
+    RequestItems: {
+      [TableName]: {
+        Keys: maxKeys,
+      },
+    },
+  };
 
-  await Promise.all(chunks.map(async (chunk) => {
-    let params = {
-      RequestItems: {
-        [TableName]: {
-          Keys: chunk
-        }
-      }
-    }
+  let response = await documentClient.batchGet(params).promise();
 
-    let models = []
-    do {
-      let data = await performBatchGet(client, params)
-      if (data) {
-        models.push(...data.Responses[TableName])
-        params.RequestItems = data.UnprocessedKeys
-      }
-    } while (Object.keys(params.RequestItems).length > 0)
-  }))
+  let {
+    Responses: { [TableName]: result },
+    UnprocessedKeys: { [TableName]: unprocessedKeys },
+    ...meta
+  } = response;
 
-  return models
-}
+  next = unprocessedKeys || [];
+  next.push(...remainingKeys);
+
+  return {
+    result,
+    meta: {
+      ...meta,
+      next,
+    },
+  };
+};

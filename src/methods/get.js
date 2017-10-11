@@ -1,12 +1,9 @@
-export default function (client, TableName, Key) {
-  return new Promise((resolve, reject) => {
-    let params = {
-      TableName,
-      Key
-    }
-    client.get(params, (err, data) => {
-      if (err) return reject(err)
-      resolve(data && data.Item)
-    })
-  })
-}
+module.exports = async function(clientPromise, TableName, Key) {
+  let { documentClient } = await clientPromise;
+  let params = {
+    TableName,
+    Key,
+  };
+  let { Item: result, ...meta } = await documentClient.get(params).promise();
+  return { result, meta };
+};

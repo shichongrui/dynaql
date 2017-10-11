@@ -1,48 +1,27 @@
-export function createUpdateExpression (update) {
-  let params = {
-    UpdateExpression: '',
-    ExpressionAttributeNames: {},
-    ExpressionAttributeValues: {}
+const createWriteExpression = require('../lib/create-write-expression');
+
+module.exports = async function(clientPromise, TableName, update) {
+  let { documentClient, indexes } = await clientPromise;
+
+  let hashKey = indexes[TableName][TableName].hash;
+  let rangeKey = indexes[TableName][TableName].range;
+
+  let { [hashKey]: hash, [rangeKey]: range, ...fieldsToUpdate } = update;
+
+  let Key = {
+    [hashKey]: hash,
+  };
+  if (rangeKey) {
+    Key[rangeKey] = range;
   }
-  let setExpression = ''
-  let removeExpression = ''
-  Object.keys(update).forEach(key => {
-    if (update[key] != null) {
-      let expressionName = `#${key}`
-      let expressionValue = `:${key}`
-      if (setExpression === '') {
-        setExpression += `SET ${expressionName} = ${expressionValue}`
-      } else {
-        setExpression += `, ${expressionName} = ${expressionValue}`
-      }
-      params.ExpressionAttributeNames[expressionName] = key
-      params.ExpressionAttributeValues[expressionValue] = update[key]
-    } else {
-      let expressionName = `#${key}`
-      if (removeExpression === '') {
-        removeExpression += `REMOVE ${expressionName}`
-      } else {
-        removeExpression += `, ${expressionName}`
-      }
-      params.ExpressionAttributeNames[expressionName] = key
-    }
-  })
-  params.UpdateExpression = `${setExpression} ${removeExpression}`
-  return params
-}
 
-export default function (client, TableName, Key, update) {
-  return new Promise((resolve, reject) => {
-    let params = {
-      TableName,
-      Key,
-      ReturnValues: 'ALL_NEW',
-      ...createUpdateExpression(update)
-    }
+  let params = {
+    TableName,
+    Key,
+    ReturnValues: 'ALL_NEW',
+    ...createWriteExpression(fieldsToUpdate),
+  };
 
-    client.update(params, (err, data) => {
-      if (err) return reject(err)
-      resolve(data.Attributes)
-    })
-  })
-}
+  let { Attributes, ...meta } = await documentClient.update(params).promise();
+  return { result: Attributes, meta };
+};

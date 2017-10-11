@@ -1,44 +1,38 @@
-import AWS from 'aws-sdk'
+const createClients = require('./lib/create-clients');
 
 // document client
-import get from './methods/get'
-import update from './methods/update'
-import query from './methods/query'
-import put from './methods/put'
-import destroy from './methods/delete'
-import getAll from './methods/get-all'
-import writeAll from './methods/write-all'
+const get = require('./methods/get');
+const update = require('./methods/update');
+const query = require('./methods/query');
+const put = require('./methods/put');
+const destroy = require('./methods/delete');
+const getAll = require('./methods/get-all');
+const writeAll = require('./methods/write-all');
 
 // normal client
-import createTable from './methods/create-table'
-import deleteTable from './methods/delete-table'
-import listTables from './methods/list-tables'
-import describeTable from './methods/describe-table'
+const createTable = require('./methods/create-table');
+const deleteTable = require('./methods/delete-table');
+const listTables = require('./methods/list-tables');
+const describeTable = require('./methods/describe-table');
+const waitFor = require('./methods/wait-for');
 
-export default function (config) {
-  let {indexes, ...restConfig} = config
-  let client = new AWS.DynamoDB.DocumentClient(restConfig)
-  let instance = new AWS.DynamoDB(restConfig)
-
-  client.indexes = indexes
-  instance.indexes = indexes
+module.exports = function(config) {
+  let clientPromise = createClients(config);
 
   return {
-    client: instance,
-    documentClient: client,
+    get: get.bind(null, clientPromise),
+    update: update.bind(null, clientPromise),
+    query: query.bind(null, clientPromise),
+    put: put.bind(null, clientPromise),
+    delete: destroy.bind(null, clientPromise),
+    getAll: getAll.bind(null, clientPromise),
+    writeAll: writeAll.bind(null, clientPromise, 'PutRequest'),
+    deleteAll: writeAll.bind(null, clientPromise, 'DeleteRequest'),
 
-    get: get.bind(null, client),
-    update: update.bind(null, client),
-    query: query.bind(null, client),
-    put: put.bind(null, client),
-    delete: destroy.bind(null, client),
-    getAll: getAll.bind(null, client),
-    writeAll: writeAll.bind(null, client, 'PutRequest'),
-    deleteAll: writeAll.bind(null, client, 'DeleteRequest'),
-
-    createTable: createTable.bind(null, instance),
-    deleteTable: deleteTable.bind(null, instance),
-    listTables: listTables.bind(null, instance),
-    describeTable: describeTable.bind(null, instance)
-  }
-}
+    createTable: createTable.bind(null, clientPromise),
+    deleteTable: deleteTable.bind(null, clientPromise),
+    listTables: listTables.bind(null, clientPromise),
+    describeTable: describeTable.bind(null, clientPromise),
+    waitFor: waitFor.bind(null, clientPromise),
+  };
+};

@@ -1,8 +1,5 @@
-export default function (client, options = {}) {
-  return new Promise((resolve, reject) => {
-    client.listTables(options, (err, data) => {
-      if (err) return reject(err)
-      resolve(data)
-    })
-  })
-}
+module.exports = async function(clientPromise, options = {}) {
+  let { client } = await clientPromise;
+  let { TableNames: result } = await client.listTables(options).promise();
+  return { result, meta: {} };
+};

@@ -1,8 +1,8 @@
-export default function (client, params) {
-  return new Promise((resolve, reject) => {
-    client.deleteTable(params, (err, data) => {
-      if (err) return reject(err)
-      resolve(data)
-    })
-  })
-}
+module.exports = async function(clientPromise, params) {
+  let { client, indexes } = await clientPromise;
+  let result = await client.deleteTable(params).promise();
+
+  delete indexes[params.TableName];
+
+  return { result, meta: {} };
+};

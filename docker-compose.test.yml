@@ -1,0 +1,5 @@
+dynamo:
+  image: instructure/dynamo-local-admin
+  environment:
+    AWS_ACCESS_KEY_ID: dynaql
+    AWS_SECRET_ACCESS_KEY: dynaql

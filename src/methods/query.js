@@ -1,57 +1,37 @@
-export function buildConditionExpression (key) {
-  let params = {
-    expression: '',
-    names: {},
-    values: {}
-  }
+const buildQueryExpression = require('../lib/build-query-expression');
+const findIndex = require('../lib/find-index');
 
-  Object.keys(key).forEach(field => {
-    let expressionName = `#${field}`
-    let expressionValue = `:${field}`
-    params.expression += `${expressionName} = ${expressionValue} `
-    params.names[expressionName] = field
-    params.values[expressionValue] = key[field]
-  })
-  return params
-}
-
-function performQuery (client, params) {
-  return new Promise((resolve, reject) => {
-    client.query(params, (err, data) => {
-      if (err) return reject(err)
-      resolve(data)
-    })
-  })
-}
-
-export default async function (client, TableName, query, options) {
-  let indexedKey = client.indexes[TableName][options.IndexName]
-  let key = { [indexedKey]: query[indexedKey] }
-  delete query[indexedKey]
-
-  let keyParams = buildConditionExpression(key)
-  let filterParams = buildConditionExpression(query)
+module.exports = async function(clientPromise, TableName, query, options = {}) {
+  let { documentClient, indexes } = await clientPromise;
 
   let params = {
     TableName,
-    KeyConditionExpression: keyParams.expression || null,
-    FilterExpression: filterParams.expression || null,
-    ...options
+  };
+  let IndexName = options.index || findIndex(indexes[TableName], query);
+
+  if (IndexName && IndexName !== TableName) {
+    params.IndexName = IndexName;
   }
 
-  if (keyParams.expression || filterParams.expression) {
-    params.ExpressionAttributeNames = {...keyParams.names, ...filterParams.names}
-    params.ExpressionAttributeValues = {...keyParams.values, ...filterParams.values}
+  if (options.next) {
+    params.ExclusiveStartKey = options.next;
   }
 
-  let models = []
-  do {
-    let data = await performQuery(client, params)
-    if (data) {
-      models.push(...data.Items)
-      params.ExclusiveStartKey = data.LastEvaluatedKey
-    }
-  } while (params.ExclusiveStartKey)
+  params = {
+    ...params,
+    ...buildQueryExpression(query, indexes[TableName][IndexName]),
+  };
 
-  return models
-}
+  let {
+    Items: result,
+    LastEvaluatedKey: next,
+    ...meta
+  } = await documentClient.query(params).promise();
+  return {
+    result,
+    meta: {
+      ...meta,
+      next,
+    },
+  };
+};
