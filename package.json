@@ -1,8 +1,8 @@
 {
   "name": "dynaql",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Dynamo library to make interacting with dynamo easier",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "./test.sh",
     "prettier": "prettier --write \"./**/*.js\""
