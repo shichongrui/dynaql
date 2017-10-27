@@ -24,4 +24,18 @@ describe('query', () => {
     });
     expect(result.length).toEqual(5);
   });
+
+  it('accepts a limit', async () => {
+    let { result } = await query(
+      testHelpers.clientPromise,
+      tableName,
+      { name: 'queryName' },
+      { limit: 1 }
+    );
+    expect(result.length).toEqual(1);
+  });
+
+  it('can sort forward', async () => {
+    
+  })
 });

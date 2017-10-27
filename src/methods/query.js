@@ -1,6 +1,26 @@
 const buildQueryExpression = require('../lib/build-query-expression');
 const findIndex = require('../lib/find-index');
 
+function buildParamsFromOptions(options) {
+  let params = {};
+
+  Object.keys(options).forEach(option => {
+    switch (option) {
+      case 'next':
+        params.ExclusiveStartKey = options.next;
+        break;
+      case 'limit':
+        params.Limit = options.limit;
+        break;
+      case 'sortForward':
+        params.ScanIndexForward = options.sortForward;
+        break;
+    }
+  });
+
+  return params;
+}
+
 module.exports = async function(clientPromise, TableName, query, options = {}) {
   let { documentClient, indexes } = await clientPromise;
 
@@ -13,12 +33,9 @@ module.exports = async function(clientPromise, TableName, query, options = {}) {
     params.IndexName = IndexName;
   }
 
-  if (options.next) {
-    params.ExclusiveStartKey = options.next;
-  }
-
   params = {
     ...params,
+    ...buildParamsFromOptions(options),
     ...buildQueryExpression(query, indexes[TableName][IndexName]),
   };
 
