@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "./test.sh",
-    "prettier": "prettier --write \"./**/*.js\"",
+    "prettier": "prettier --write \"./**/*.js\""
   },
   "repository": {
     "type": "git",
