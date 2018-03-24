@@ -1,11 +1,11 @@
 {
   "name": "dynaql",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "description": "Dynamo library to make interacting with dynamo easier",
   "main": "src/index.js",
   "scripts": {
     "test": "./test.sh",
-    "prettier": "prettier --write \"./**/*.js\""
+    "prettier": "prettier --write \"./**/*.js\"",
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/shichongrui/dynaql#readme",
   "engines": {
-    "node": ">=8.6.0"
+    "node": ">=8.9"
   },
   "dependencies": {
     "aws-sdk": "2.5.6",

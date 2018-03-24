@@ -9,6 +9,8 @@ module.exports = async function createClient(config) {
 
   let { result } = await listTables(Promise.resolve({ client }));
 
+  if (!result) result = []
+
   let tableDefinitions = await Promise.all(
     result.map(tableName =>
       describeTable(Promise.resolve({ client }), tableName)
