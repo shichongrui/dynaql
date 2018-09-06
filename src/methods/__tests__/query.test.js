@@ -35,7 +35,5 @@ describe('query', () => {
     expect(result.length).toEqual(1);
   });
 
-  it('can sort forward', async () => {
-    
-  })
+  it('can sort forward', async () => {});
 });

@@ -7,7 +7,15 @@ module.exports = async function createClient(config) {
   let client = new AWS.DynamoDB(config);
   let documentClient = new AWS.DynamoDB.DocumentClient({ service: client });
 
-  let { result } = await listTables(Promise.resolve({ client }));
+  let result;
+  do {
+    let data = await listTables(Promise.resolve({ client }));
+    if (data.result) {
+      result = data.result;
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  } while (!result);
 
   if (!result) result = []
 
