@@ -17,7 +17,7 @@ module.exports = async function createClient(config) {
     }
   } while (!result);
 
-  if (!result) result = []
+  if (!result) result = [];
 
   let tableDefinitions = await Promise.all(
     result.map(tableName =>

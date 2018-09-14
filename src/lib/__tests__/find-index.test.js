@@ -17,6 +17,9 @@ describe('findIndex', () => {
       hash: 'username',
       range: 'startDate',
     },
+    fifth: {
+      hash: 'startDate',
+    },
   };
 
   it('finds the index schema when it matches both hash and range key', () => {
@@ -29,5 +32,9 @@ describe('findIndex', () => {
 
   it('finds the first hash/range index using the hash key', () => {
     expect(findIndex(indexes, { id: '1' })).toEqual('first');
+  });
+
+  it('finds the index using the hash even when the key is range key in another index', () => {
+    expect(findIndex(indexes, { startDate: 1234 })).toEqual('fifth');
   });
 });
