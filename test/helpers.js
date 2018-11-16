@@ -56,6 +56,38 @@ async function createTableHelper(TableName) {
   await waitFor(clientPromise, TableName, 'tableExists');
 }
 
+async function createTableWithRangeHelper(TableName) {
+  await createTable(clientPromise, {
+    TableName,
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 1,
+      WriteCapacityUnits: 1,
+    },
+    KeySchema: [
+      {
+        AttributeName: 'id',
+        KeyType: 'HASH',
+      },
+      {
+        AttributeName: 'number',
+        KeyType: 'RANGE',
+      },
+    ],
+    AttributeDefinitions: [
+      {
+        AttributeName: 'id',
+        AttributeType: 'S',
+      },
+      {
+        AttributeName: 'number',
+        AttributeType: 'N',
+      },
+    ],
+  });
+
+  await waitFor(clientPromise, TableName, 'tableExists');
+}
+
 async function deleteTableHelper(TableName) {
   await deleteTable(clientPromise, { TableName });
   await waitFor(clientPromise, TableName, 'tableNotExists');
@@ -63,6 +95,7 @@ async function deleteTableHelper(TableName) {
 
 module.exports = {
   createTable: createTableHelper,
+  createTableWithRange: createTableWithRangeHelper,
   deleteTable: deleteTableHelper,
   clientPromise,
 };

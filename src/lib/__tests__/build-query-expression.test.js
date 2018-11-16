@@ -31,4 +31,30 @@ describe('buildQueryExpression', () => {
       },
     });
   });
+
+  it('builds custom range key expressions', () => {
+    let params = buildQueryExpression(
+      {
+        id: '1',
+        date: {
+          '>': '2',
+          '>=': '3',
+        },
+      },
+      { hash: 'id', range: 'date' }
+    );
+    expect(params).toEqual({
+      KeyConditionExpression:
+        '#HASH = :HVALUE AND #RANGE > :RVALUE0 AND #RANGE >= :RVALUE1',
+      ExpressionAttributeNames: {
+        '#HASH': 'id',
+        '#RANGE': 'date',
+      },
+      ExpressionAttributeValues: {
+        ':HVALUE': '1',
+        ':RVALUE0': '2',
+        ':RVALUE1': '3',
+      },
+    });
+  });
 });

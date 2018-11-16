@@ -10,9 +10,17 @@ module.exports = function buildExpression(key, index) {
   };
 
   if (key[index.range]) {
-    params.KeyConditionExpression += ' AND #RANGE = :RVALUE';
-    (params.ExpressionAttributeNames['#RANGE'] = index.range),
-      (params.ExpressionAttributeValues[':RVALUE'] = key[index.range]);
+    if (typeof key[index.range] === 'object') {
+      Object.keys(key[index.range]).forEach((rangeKey, i) => {
+        params.KeyConditionExpression += ` AND #RANGE ${rangeKey} :RVALUE${i}`;
+        params.ExpressionAttributeValues[`:RVALUE${i}`] =
+          key[index.range][rangeKey];
+      });
+    } else {
+      params.KeyConditionExpression += ' AND #RANGE = :RVALUE';
+      params.ExpressionAttributeValues[':RVALUE'] = key[index.range];
+    }
+    params.ExpressionAttributeNames['#RANGE'] = index.range;
   }
 
   return params;
