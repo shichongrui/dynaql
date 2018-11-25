@@ -25,7 +25,7 @@ module.exports = async function(clientPromise, writeType, TableName, items) {
   } = await documentClient.batchWrite(params).promise();
 
   unprocessedItems = (unprocessedItems[TableName] || []).map(item => {
-    return item[writeType];
+    return item[writeType].Item;
   });
 
   return {
