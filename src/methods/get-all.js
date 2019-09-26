@@ -22,7 +22,7 @@ module.exports = async function(clientPromise, TableName, Keys) {
     ...meta
   } = response;
 
-  next = unprocessedKeys || [];
+  let next = unprocessedKeys == null ? [] : unprocessedKeys;
   next.push(...remainingKeys);
 
   return {
