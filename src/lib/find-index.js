@@ -11,11 +11,15 @@ module.exports = function(indexes, key) {
     ) {
       return true;
     }
+  });
 
+  if (index != null) return index;
+
+  index = indexNames.find(indexName => {
+    let index = indexes[indexName];
     if (keys[0] === index.hash) {
       return true;
     }
   });
-
   return index;
 };

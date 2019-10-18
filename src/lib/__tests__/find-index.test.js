@@ -34,6 +34,10 @@ describe('findIndex', () => {
     expect(findIndex(indexes, { id: '1' })).toEqual('first');
   });
 
+  it('finds the correct hash/range index when it isnt the first in the list', () => {
+    expect(findIndex(indexes, { id: '1', startDate: '1234' })).toEqual('third');
+  });
+
   it('finds the index using the hash even when the key is range key in another index', () => {
     expect(findIndex(indexes, { startDate: 1234 })).toEqual('fifth');
   });
