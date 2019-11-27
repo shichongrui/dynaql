@@ -1,7 +1,7 @@
 const createClients = require('./lib/create-clients');
 
 // document client
-const scan = require('./methods/scan')
+const scan = require('./methods/scan');
 const get = require('./methods/get');
 const update = require('./methods/update');
 const query = require('./methods/query');

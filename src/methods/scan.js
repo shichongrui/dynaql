@@ -13,7 +13,7 @@ module.exports = async function(clientPromise, TableName) {
     result,
     meta: {
       ...meta,
-      next
-    }
+      next,
+    },
   };
 };
