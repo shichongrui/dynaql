@@ -22,4 +22,23 @@ describe('scan', () => {
     let { result } = await scan(testHelpers.clientPromise, tableName);
     expect(result.length).toEqual(5);
   });
+
+  it('accepts a limit', async () => {
+    let { result } = await scan(testHelpers.clientPromise, tableName, {
+      limit: 1,
+    });
+    expect(result.length).toEqual(1);
+  });
+
+  it('can paginate', async () => {
+    let firstResult = await scan(testHelpers.clientPromise, tableName, {
+      limit: 1,
+    });
+
+    let secondResult = await scan(testHelpers.clientPromise, tableName, {
+      limit: 1,
+      next: firstResult.meta.next,
+    });
+    expect(firstResult.result).not.toEqual(secondResult.result);
+  });
 });
