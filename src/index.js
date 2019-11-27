@@ -1,6 +1,7 @@
 const createClients = require('./lib/create-clients');
 
 // document client
+const scan = require('./methods/scan')
 const get = require('./methods/get');
 const update = require('./methods/update');
 const query = require('./methods/query');
@@ -20,6 +21,7 @@ module.exports = function(config) {
   let clientPromise = createClients(config);
 
   return {
+    scan: scan.bind(null, clientPromise),
     get: get.bind(null, clientPromise),
     update: update.bind(null, clientPromise),
     query: query.bind(null, clientPromise),
