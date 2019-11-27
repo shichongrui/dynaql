@@ -14,6 +14,7 @@ describe('dynaql', () => {
     let methods = Object.keys(db);
 
     expect(methods).toEqual([
+      'scan',
       'get',
       'update',
       'query',
